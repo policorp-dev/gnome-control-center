@@ -1,0 +1,6 @@
+kbd-lvl3.patch
+debian/Expose-touchpad-settings-if-synaptics-is-in-use.patch
+debian/Debian-s-adduser-doesn-t-allow-uppercase-letters-by-defau.patch
+debian/Ignore-result-of-test-network-panel.patch
+POLICORP-remove-privacy-desktop.patch
+0001-fix-resolution-1600-1200.patch

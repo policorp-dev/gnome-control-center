@@ -1,0 +1,65 @@
+Index: gnome-control-center/panels/display/cc-display-settings.c
+===================================================================
+--- gnome-control-center.orig/panels/display/cc-display-settings.c
++++ gnome-control-center/panels/display/cc-display-settings.c
+@@ -27,6 +27,7 @@
+ #include "cc-display-config.h"
+ 
+ #define MAX_SCALE_BUTTONS 5
++#define BOARD_NAME_PATH "/sys/class/dmi/id/board_name"
+ 
+ struct _CcDisplaySettings
+ {
+@@ -367,6 +368,27 @@ sort_modes_by_refresh_rate_desc (CcDispl
+   return delta;
+ }
+ 
++gboolean is_board_name_vjfe69b(void) {
++    FILE *file = fopen(BOARD_NAME_PATH, "r");
++    char buffer[256];
++
++    if (!file) {
++        g_warning("Failed to open %s", BOARD_NAME_PATH);
++        return FALSE;
++    }
++
++    if (fgets(buffer, sizeof(buffer), file) != NULL) {
++        buffer[strcspn(buffer, "\n")] = '\0';
++        fclose(file);
++
++        return strcmp(buffer, "VJFE69B") == 0;
++    }
++
++    fclose(file);
++    g_warning("Failed to read board name from %s", BOARD_NAME_PATH);
++    return FALSE;
++}
++
+ static gboolean
+ cc_display_settings_rebuild_ui (CcDisplaySettings *self)
+ {
+@@ -499,6 +521,12 @@ cc_display_settings_rebuild_ui (CcDispla
+           CcDisplayModeRefreshRateMode refresh_rate_mode;
+ 
+           cc_display_mode_get_resolution (mode, &w, &h);
++	  if (is_board_name_vjfe69b() && w == 1600 && h == 1200)
++	  {
++		  g_debug("The board name is VJFE69B.");
++		  continue;
++	  }
++
+           if (w != width || h != height)
+             continue;
+ 
+@@ -570,6 +598,11 @@ cc_display_settings_rebuild_ui (CcDispla
+       CcDisplayMode *mode = CC_DISPLAY_MODE (item->data);
+ 
+       cc_display_mode_get_resolution (mode, &w, &h);
++	  if (is_board_name_vjfe69b() && w == 1600 && h == 1200)
++	  {
++		  g_debug("The board name is VJFE69B in rebuild.");
++		  continue;
++	  }
+ 
+       /* Find the appropriate insertion point. */
+       for (ins = 0; ins < g_list_model_get_n_items (G_LIST_MODEL (self->resolution_list)); ins++)
