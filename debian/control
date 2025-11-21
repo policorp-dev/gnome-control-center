@@ -61,6 +61,7 @@ Build-Depends: debhelper-compat (= 13),
                xvfb
 Standards-Version: 4.7.0
 Rules-Requires-Root: no
+Vcs-Git: https://github.com/policorp-dev/gnome-control-center.git
 
 Package: gnome-control-center
 Architecture: any
